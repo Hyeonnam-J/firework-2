@@ -1,5 +1,10 @@
-import { viewWidth, viewHeight, canvas, ctx } from './canvas.js';
+import { canvas, ctx, getPercentageBasedCoordinatesX, getPercentageBasedCoordinatesY } from './canvas.js';
 
-console.log(viewWidth);
-console.log(viewHeight);
+console.log(canvas.width);
+console.log(canvas.height);
+
+const n = getPercentageBasedCoordinatesX(10);
+
+console.log(n);
+
 
