@@ -1,6 +1,5 @@
-const element = document.querySelector('#d');
-if (element !== null) {
-    element.classList.add('d');
-}
+import { viewWidth, viewHeight, canvas, ctx } from './canvas.js';
 
-console.log('is ok??');
+console.log(viewWidth);
+console.log(viewHeight);
+

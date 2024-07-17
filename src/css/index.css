@@ -1,3 +1,17 @@
-.d {
-   background-color: grey;
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body {
+   width: 100%;
+   height: 100%;
+   overflow: hidden;
+}
+
+#canvas {
+   width: 100%;
+   height: 100%;
+   border: 1px solid blueviolet;
 }
