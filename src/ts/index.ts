@@ -1,9 +1,9 @@
-import { canvas, ctx, getPercentageBasedCoordinatesX, getPercentageBasedCoordinatesY } from './canvas.js';
+import { canvas, ctx, x, y } from './canvas.js';
 
 console.log(canvas.width);
 console.log(canvas.height);
 
-const n = getPercentageBasedCoordinatesX(10);
+const n = x(10);
 
 console.log(n);
 
