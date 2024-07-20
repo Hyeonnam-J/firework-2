@@ -14,5 +14,5 @@ export function x(percentage: number) : number {
 }
 
 export function y(percentage: number) : number {
-    return Math.floor( canvas.height * (percentage / 100) );
+    return canvas.height - Math.floor( canvas.height * (percentage / 100) ); // Set the baseline using the bottom.
 }
