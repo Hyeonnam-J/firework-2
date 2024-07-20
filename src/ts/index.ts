@@ -1,10 +1,7 @@
-import { canvas, ctx, x, y } from './canvas.js';
+import { x, y } from './canvas.js';
+import { play } from './play.js';
+import { shot } from './shot.js';
 
-console.log(canvas.width);
-console.log(canvas.height);
+play();
 
-const n = x(10);
-
-console.log(n);
-
-
+shot(5, x(50), y(0), x(0), y(50));
