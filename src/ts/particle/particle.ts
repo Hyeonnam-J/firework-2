@@ -50,17 +50,17 @@ export class BaseParticle implements Particle {
 
     draw() {
         if(ctx != null) {
-            ctx.save();
+            ctx.save(); // 캔버스 상태 저장. 여기서는 rotate 되기 전의 상태를 저장.
 
-            ctx.translate(this.current_x + BaseParticle.width / 2, this.current_y + BaseParticle.height / 2); // 회전.
+            ctx.translate(this.current_x + BaseParticle.width / 2, this.current_y + BaseParticle.height / 2); // 그릴 사각형의 중심이 회전의 중심이 되도록 이동.
             ctx.rotate(this.angle);
-            ctx.translate(-(this.current_x + BaseParticle.width / 2), -(this.current_y + BaseParticle.height / 2)); // 복구.
+            ctx.translate(-(this.current_x + BaseParticle.width / 2), -(this.current_y + BaseParticle.height / 2)); // translate 복구.
 
             // ctx.fillStyle = 'yellow';
             ctx.fillStyle = 'white';
             ctx.fillRect(this.current_x, this.current_y, BaseParticle.width, BaseParticle.height);
 
-            ctx.restore();
+            ctx.restore(); // 캔버스 상태 복구.
         }
     }
 }
