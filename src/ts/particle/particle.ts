@@ -9,8 +9,10 @@ export interface Particle {
 }
 
 export class BaseParticle implements Particle {
-    static readonly width = 20;
-    static readonly height = 4;
+    static readonly width = 2;
+    static readonly height = 30;
+    static readonly head = 1;
+    static readonly radius = 2;
 
     time: number;
     start_x: number;
@@ -31,9 +33,20 @@ export class BaseParticle implements Particle {
         this.end_y = end_y;
         this.current_x = start_x;
         this.current_y = start_y;
-        this.angle = Math.atan2(end_y - start_y, end_x - start_x);
+
+        // 전통적인 수학 좌표계와 다르게 javascript canvas 좌표계는 y축이 아래를 향할수록 증가한다.
+        // atan2 메서드는 이를 고려하여 라디안 값을 반환.
+        // 그러나 불꽃놀이 프로젝트 편의상 y값이 축 위를 향할수록 증가하도록 설계했기 때문에,
+        // atan2 파라미터로 보내는 y의 길이는 시작점에서 끝점을 뺀다. - end_y - start_y.
+        //
+        // 또 불꽃놀이 프로젝트 편의상 위로 솟는 방향을 0도로 설계해서 
+        // 90도, 즉 라디안 1.57을 빼준다.
+        this.angle = Math.atan2(start_y - end_y, end_x - start_x) - 1.57;
+
         this.startTime = performance.now();
         this.progress = 0;
+
+        console.log(this.angle);
     }
 
     update() {
@@ -56,12 +69,37 @@ export class BaseParticle implements Particle {
             ctx.rotate(this.angle);
             ctx.translate(-(this.current_x + BaseParticle.width / 2), -(this.current_y + BaseParticle.height / 2)); // translate 복구.
 
-            // ctx.fillStyle = 'yellow';
-            ctx.fillStyle = 'white';
-            ctx.fillRect(this.current_x, this.current_y, BaseParticle.width, BaseParticle.height);
+            ctx.fillStyle = 'yellow';
+            // ctx.fillStyle = 'white';
+
+            // ctx.fillRect(this.current_x, this.current_y, BaseParticle.width, BaseParticle.height);
+            BaseParticle.createParticle(ctx, this.current_x, this.current_y, BaseParticle.width, BaseParticle.height, BaseParticle.head, BaseParticle.radius);
+            ctx.fill();
 
             ctx.restore(); // 캔버스 상태 복구.
         }
+    }
+
+    static createParticle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, head:number, radius: number) {
+        ctx.beginPath();
+
+        // + head,
+        // ctx.moveTo(x - head, y);
+        // ctx.lineTo(x + width + head, y);
+        // ctx.lineTo(x + width, y + height);
+        // ctx.lineTo(x, y + height);
+        // ctx.lineTo(x - head, y);
+
+        // + head, radius
+        ctx.moveTo(x - head + radius, y);
+        ctx.lineTo(x + width + head - radius, y);
+        ctx.arcTo(x + width + head, y, x + width + head, y + radius, radius);
+        ctx.lineTo(x + width, y + height);
+        ctx.lineTo(x, y + height);
+        ctx.lineTo(x - head, y + radius);
+        ctx.arcTo(x - head, y, x - head + radius, y, radius);
+
+        ctx.closePath();
     }
 }
 
