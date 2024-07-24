@@ -14,23 +14,27 @@ export class BaseParticle implements Particle {
     static readonly head = 1;
     static readonly radius = 2;
 
-    time: number;
     start_x: number;
     start_y: number;
     end_x: number;
     end_y: number;
+    time: number;
+    color: string;
+
     current_x: number;
     current_y: number;
     angle: number;
     startTime: number;
     progress: number;
 
-    constructor(time: number, start_x: number, start_y: number, end_x: number, end_y: number) {
-        this.time = time * 1000; // 화면 구성 편의상 초 단위로 보낸 시간을 밀리초로 전환.
+    constructor(start_x: number, start_y: number, end_x: number, end_y: number, time: number, color: string) {
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
         this.end_y = end_y;
+        this.time = time * 1000; // 화면 구성 편의상 초 단위로 보낸 시간을 밀리초로 전환.
+        this.color = color;
+
         this.current_x = start_x;
         this.current_y = start_y;
 
@@ -65,13 +69,24 @@ export class BaseParticle implements Particle {
         if(ctx != null) {
             ctx.save(); // 캔버스 상태 저장. 여기서는 rotate 되기 전의 상태를 저장.
 
+            // color.
+            ctx.fillStyle = this.color;
+
+            // gradient.
+            const gradient = ctx.createLinearGradient(this.current_x, this.current_y, this.current_x + BaseParticle.width, this.current_y + BaseParticle.height);
+            gradient.addColorStop(0, this.color);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+
+            // opacity.
+            ctx.globalAlpha = 1 - this.progress;
+
+            // rotate.
             ctx.translate(this.current_x + BaseParticle.width / 2, this.current_y + BaseParticle.height / 2); // 그릴 사각형의 중심이 회전의 중심이 되도록 이동.
             ctx.rotate(this.angle);
             ctx.translate(-(this.current_x + BaseParticle.width / 2), -(this.current_y + BaseParticle.height / 2)); // translate 복구.
 
-            ctx.fillStyle = 'yellow';
-            // ctx.fillStyle = 'white';
-
+            // fill.
             // ctx.fillRect(this.current_x, this.current_y, BaseParticle.width, BaseParticle.height);
             BaseParticle.createParticle(ctx, this.current_x, this.current_y, BaseParticle.width, BaseParticle.height, BaseParticle.head, BaseParticle.radius);
             ctx.fill();
