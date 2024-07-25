@@ -1,5 +1,5 @@
 import { canvas, ctx } from "./canvas.js";
-import { particle_arr } from "./particle/particle.js";
+import { particle_arr } from "./particles/particle.js";
 
 export function play() {
     if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
