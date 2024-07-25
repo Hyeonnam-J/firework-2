@@ -20,6 +20,7 @@ export class BaseParticle implements Particle {
     end_y: number;
     time: number;
     color: string;
+    callback: () => void;
 
     current_x: number;
     current_y: number;
@@ -27,13 +28,14 @@ export class BaseParticle implements Particle {
     startTime: number;
     progress: number;
 
-    constructor(start_x: number, start_y: number, end_x: number, end_y: number, time: number, color: string) {
+    constructor(start_x: number, start_y: number, end_x: number, end_y: number, time: number, color: string, callback: () => void) {
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
         this.end_y = end_y;
         this.time = time * 1000; // 화면 구성 편의상 초 단위로 보낸 시간을 밀리초로 전환.
         this.color = color;
+        this.callback = callback;
 
         this.current_x = start_x;
         this.current_y = start_y;
@@ -50,7 +52,6 @@ export class BaseParticle implements Particle {
         this.startTime = performance.now();
         this.progress = 0;
 
-        console.log(this.angle);
     }
 
     update() {
@@ -62,6 +63,8 @@ export class BaseParticle implements Particle {
         } else {
             const deleteIdx = particle_arr.indexOf(this);
             particle_arr.splice(deleteIdx, 1);
+
+            this.callback();
         }
     }
 
