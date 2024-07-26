@@ -10,10 +10,10 @@ export interface Particle {
 }
 
 export class BaseParticle implements Particle {
-    static readonly width = 2;
-    static readonly height = 30;
-    static readonly head = 1;
-    static readonly radius = 2;
+    static readonly width = 30;
+    static readonly height = 4;
+    static readonly head = 2;
+    static readonly radius = 4;
 
     start_x: number;
     start_y: number;
@@ -68,24 +68,21 @@ export class BaseParticle implements Particle {
         if(ctx != null) {
             ctx.save(); // 캔버스 상태 저장. 여기서는 rotate 되기 전의 상태를 저장.
 
-            // Creating a gradient with 90 degrees as the reference.
-            const gradient = ctx.createLinearGradient(this.current_x, this.current_y, this.current_x + BaseParticle.width, this.current_y + BaseParticle.height);
+            // Gradient from right to left.
+            const gradient = ctx.createLinearGradient(this.current_x + BaseParticle.width, this.current_y + BaseParticle.height / 2, this.current_x, this.current_y + BaseParticle.height / 2);
             gradient.addColorStop(0, this.color);
             gradient.addColorStop(1, 'transparent');
             ctx.fillStyle = gradient;
 
-            // opacity.
+            // Opacity.
             ctx.globalAlpha = 1 - this.progress;
 
-            // rotate.
+            // Rotate.
             ctx.translate(this.current_x + BaseParticle.width / 2, this.current_y + BaseParticle.height / 2); // 그릴 사각형의 중심이 회전의 중심이 되도록 이동.
-            // 물체를 90도 기준으로 그렸기 때문에 다 그렸으면 물체를 다시 -90도 돌려야 한다.
-            // 캔버스를 90도 돌림으로 물체를 -90도 돌린 효과를 준다.
-            // 90 degrees == 1.57 radians.
-            ctx.rotate(this.degrees * (Math.PI / 180) + 1.57);
+            ctx.rotate(-(this.degrees * (Math.PI / 180))); // 캔버스를 회전시키면 파티클은 역으로 회전된다. 기준을 우리 시야로 잡기 위해 앞에 -1을 곱함.
             ctx.translate(-(this.current_x + BaseParticle.width / 2), -(this.current_y + BaseParticle.height / 2)); // translate 복구.
 
-            // fill.
+            // Fill.
             BaseParticle.createParticle(ctx, this.current_x, this.current_y, BaseParticle.width, BaseParticle.height, BaseParticle.head, BaseParticle.radius);
             ctx.fill();
 
@@ -93,18 +90,18 @@ export class BaseParticle implements Particle {
         }
     }
 
-    // Drawn with 90 degrees as the reference.
+    // Drawn with 0 degrees as the reference.
     static createParticle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, head:number, radius: number) {
         ctx.beginPath();
 
-        ctx.moveTo(x - head + radius, y);
-        ctx.lineTo(x + width + head - radius, y);
-        ctx.arcTo(x + width + head, y, x + width + head, y + radius, radius);
-        ctx.lineTo(x + width, y + height);
+        ctx.moveTo(x + width - radius, y);
+        ctx.arcTo(x + width, y, x + width, y + radius, radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
         ctx.lineTo(x, y + height);
-        ctx.lineTo(x - head, y + radius);
-        ctx.arcTo(x - head, y, x - head + radius, y, radius);
-
+        ctx.lineTo(x, y);
+        ctx.lineTo(x + width - radius, y);
+        
         ctx.closePath();
     }
 }

@@ -5,4 +5,5 @@ import { burst } from './processes/explosions/burst.js';
 
 play();
 
-ignite(x(50), y(50), 250, 0, 5, 'white', burst);
+ignite(x(50), y(50), 250, 0, 5, 'yellow', burst);
+ignite(x(50), y(0), 250, 90, 5, 'yellow', burst);
