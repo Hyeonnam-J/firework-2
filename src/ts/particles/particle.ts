@@ -10,10 +10,10 @@ export interface Particle {
 }
 
 export class BaseParticle implements Particle {
-    static readonly width = 30;
-    static readonly height = 4;
-    static readonly head = 2;
-    static readonly radius = 4;
+    static readonly width = 20;
+    static readonly height = 2;
+    static readonly head = 1;
+    static readonly radius = 2;
 
     start_x: number;
     start_y: number;
@@ -94,13 +94,12 @@ export class BaseParticle implements Particle {
     static createParticle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, head:number, radius: number) {
         ctx.beginPath();
 
-        ctx.moveTo(x + width - radius, y);
-        ctx.arcTo(x + width, y, x + width, y + radius, radius);
+        ctx.moveTo(x + width - radius, y - head);
+        ctx.arcTo(x + width, y - head, x + width, y + radius, radius);
         ctx.lineTo(x + width, y + height - radius);
-        ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+        ctx.arcTo(x + width, y + height + head, x + width - radius, y + height + head, radius);
         ctx.lineTo(x, y + height);
         ctx.lineTo(x, y);
-        ctx.lineTo(x + width - radius, y);
         
         ctx.closePath();
     }
