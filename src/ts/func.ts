@@ -17,3 +17,7 @@ export function getEndPoint(start_x: number, start_y: number, distance: number, 
     const end_y = start_y - distance * Math.sin(radians) // y-values are designed to increase as they go up the axis.
     return { end_x, end_y }
 }
+
+// export function getRadiansWithDegrees(degrees: number): number {
+//     return -(degrees * (Math.PI / 180))
+// }

@@ -9,11 +9,14 @@ export interface Particle {
     draw(): void
 }
 
+// degrees는 개발자 편의상 파티클 초기 방향을 설정할 때 사용되며
 export class BaseParticle implements Particle {
     static readonly width = 30
     static readonly height = 3
     static readonly head = 1
     static readonly radius = 3
+
+    static readonly gravity = 0.5
 
     start_x: number
     start_y: number
@@ -27,6 +30,7 @@ export class BaseParticle implements Particle {
     current_y: number
     end_x: number
     end_y: number
+    radians: number
     startTime: number
     progress: number
 
@@ -46,6 +50,10 @@ export class BaseParticle implements Particle {
         this.end_x = end_point.end_x
         this.end_y = end_point.end_y
 
+        // Degrees to radians.
+        // When the canvas is rotated, the particles rotate in the opposite direction. To align the reference frame with our view, we multiply by -1.
+        this.radians = -(this.degrees * (Math.PI / 180))
+
         this.startTime = performance.now()
         this.progress = 0
     }
@@ -54,8 +62,16 @@ export class BaseParticle implements Particle {
         this.progress = (performance.now() - this.startTime) / this.time
 
         if (this.progress < 1) {
+            // Update radians based on the current position and the dynamically changing end position.
+            // The value of end_y is continuously updated due to the effects of gravity, 
+            // so the radians needs to be recalculated to reflect the new trajectory.
+            this.end_y += BaseParticle.gravity
+            this.radians = Math.atan2(this.end_y - this.current_y, this.end_x - this.current_x)
+
             this.current_x = this.start_x + (this.end_x - this.start_x) * easeOutCubic(this.progress)
             this.current_y = this.start_y + (this.end_y - this.start_y) * easeOutCubic(this.progress)
+
+            this.draw()
         } else {
             const deleteIdx = particle_arr.indexOf(this)
             particle_arr.splice(deleteIdx, 1)
@@ -79,7 +95,7 @@ export class BaseParticle implements Particle {
 
             // Rotate.
             ctx.translate(this.current_x + BaseParticle.width / 2, this.current_y + BaseParticle.height / 2) // 그릴 사각형의 중심이 회전의 중심이 되도록 이동.
-            ctx.rotate(-(this.degrees * (Math.PI / 180))) // 캔버스를 회전시키면 파티클은 역으로 회전된다. 기준을 우리 시야로 잡기 위해 앞에 -1을 곱함.
+            ctx.rotate(this.radians)
             ctx.translate(-(this.current_x + BaseParticle.width / 2), -(this.current_y + BaseParticle.height / 2)) // translate 복구.
 
             // Fill.

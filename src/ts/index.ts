@@ -12,10 +12,10 @@ const initiationStartPoint = {
     start_x: x(50),
     start_y: RisingParticle.y
 }
-const distance = 250
+const distance = 400
 const degrees = 90
 const time = 3
-const color = 'blue'
+const color = 'yellow'
 const initiationEndPoint = getEndPoint(initiationStartPoint.start_x, initiationStartPoint.start_y, distance, degrees)
 const explosionStartPoint = {
     start_x: initiationEndPoint.end_x,
