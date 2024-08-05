@@ -6,9 +6,6 @@ export class RisingParticle extends BaseParticle {
     static readonly degrees: number = 90
 
     constructor(start_x: number, distance: number, time: number, color: string, callback: () => void) {
-        const start_y = RisingParticle.y
-        const degrees = RisingParticle.degrees
-
-        super(start_x, start_y, distance, degrees, time, color, callback)
+        super(start_x, RisingParticle.y, distance, RisingParticle.degrees, time, color, callback)
     }
 }
